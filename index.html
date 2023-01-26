@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Canvas</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<style>
+		p {
+			font-size: 25px; 
+			text-align: justify;
+		}
+		span {
+			font-size: 30px;
+			font-weight: 500;
+			color: #a6e22e;
+		}
+		img {
+			width: 150px;
+			height: 150px;
+		}
+		ul {
+			text-align: left;
+			font-size: 25px;
+		}
+	</style>
+	<body>
+		<div class="reveal" style="background-color: #0e0211">
+			<div class="slides">
+				<section>
+					<h1>CANVAS</h1>
+				</section>
+				<section>
+					<h2>About Canvas</h2>
+					<br>
+					<p style="font-size: 35px;">
+						&#60;canvas&#62; is an HTML element which can be used to draw graphics via scripting (usually JavaScript). This can, for instance, be used to draw graphs, combine photos, or create simple animations.
+					</p>
+					<p style="font-size: 35px;">
+						First introduced in WebKit by Apple for the macOS Dashboard, &#60;canvas&#62; has since been implemented in browsers. Today, all major browsers support it.
+					</p>
+				</section>
+				<section>
+					<h3>Basic usage of canvas</h3>
+					<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+						<canvas id="tutorial" width="150" height="150"></canvas>
+					</code></pre>
+					<p>
+						At first sight a &#60;canvas&#62; looks like the &#60;img&#62; element, with the only clear difference being that it doesn't have the src and alt attributes. Indeed, the &#60;canvas&#62; element has only two attributes, width and height. These are both optional and can also be set using DOM properties. When no width and height attributes are specified, the canvas will initially be 300 pixels wide and 150 pixels high. The element can be sized arbitrarily by CSS, but during rendering the image is scaled to fit its layout size: if the CSS sizing doesn't respect the ratio of the initial canvas, it will appear distorted.
+					</p>
+					<p>
+						The &#60;canvas&#62; element can be styled just like any normal image (margin, border, background…). These rules, however, don't affect the actual drawing on the canvas.
+					</p>
+				</section>
+				<section>
+					<h3>Accessible content</h3>
+					<p>
+						The &#60;canvas&#62; element, like the &#60;img&#62;, &#60;video&#62;, &#60;audio&#62;, and &#60;picture&#62; elements, must be made accessible by providing fallback text to be displayed when the media doesn't load or the user is unable to experience it as intended. You should always provide fallback content, captions, and alternative text, as appropriate for the media type.
+					</p>
+					<p>
+						Providing fallback content is very straightforward: just insert the alternate content inside the &#60;canvas&#62; element to be accessed by screen readers, spiders, and other automated bots. Browsers, by default, will ignore the content inside the container, rendering the canvas normally unless &#60;canvas&#62; isn't supported.
+					</p>
+					<p><small>For example:</small></p>
+					<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+						<canvas id="stockGraph" width="150" height="150">
+							current stock price: $3.15 + 0.15
+						</canvas>
+						
+						<canvas id="clock" width="150" height="150">
+							<img src="images/clock.png" width="150" height="150" alt="A clock" />
+						</canvas>
+					</code></pre>
+				</section>
+				<section>
+					<h3>The rendering context</h3>
+					<p>
+						The &#60;canvas&#62; element creates a fixed-size drawing surface that exposes one or more rendering contexts, which are used to create and manipulate the content shown. In this tutorial, we focus on the 2D rendering context.
+					</p>
+					<p>
+						The canvas is initially blank. To display something, a script first needs to access the rendering context and draw on it. The &#60;canvas&#62; element has a method called getContext(), used to obtain the rendering context and its drawing functions. getContext() takes one parameter, the type of context. 
+					</p>
+					<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+						const canvas = document.getElementById("tutorial");
+						const context = canvas.getContext("2d");
+					</code></pre>
+				</section>
+				<section>
+					<h3>Drawing rectangles</h3>
+					<p>There are three functions that draw rectangles on the canvas:</p>
+					<ul>
+						<li><span>fillRect(x, y, width, height):</span> Draws a filled rectangle.</li>
+						<li><span>strokeRect(x, y, width, height):</span> Draws a rectangular outline.</li>
+						<li><span>clearRect(x, y, width, height):</span> Clears the specified rectangular area, making it fully transparent.</li>
+					</ul>
+					<p>
+						Each of these three functions takes the same parameters. x and y specify the position on the canvas (relative to the origin) of the top-left corner of the rectangle. width and height provide the rectangle's size.
+					</p>
+				</section>
+				<section>
+					<section>
+						<h3>Drawing setup</h3>
+						<p>
+							The context of the canvas element provides a number of properties that can be used to customize how the canvas is rendered. Such properties include the following:
+						</p>
+						<ul>
+							<li><span>strokeStyle:</span> sets the color of the lines or the color of the outline. The default color is black</li>
+							<li><span>fillStyle:</span> sets the fill color of the shapes. The default color is black</li>
+							<li><span>lineWidth:</span> sets the thickness of the lines. Default is 1.0</li>
+							<li><span>lineJoin:</span> sets the line connection style</li>
+							<li><span>globalAlpha:</span> sets the transparency of the rendering on the canvas</li>
+							<li><span>setLineDash:</span> creates a line of short dashes</li>
+						</ul>
+					</section>
+					<section>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								context.strokeStyle = "red";
+								context.fillStyle = "blue";
+
+								context.strokeRect(50, 40, 100, 100);
+								context.fillRect(200, 40, 100, 100);
+						</code></pre>
+						<img src="https://metanit.com/web/html5/pics/6.31.png" alt="img" style="width: 400px; height: 300px;">
+					</section>
+					<section>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+							context.strokeStyle = "red";
+							context.fillStyle = "blue";
+							context.lineWidth = 6.5;
+ 
+							context.strokeRect(50, 40, 100, 100);
+							context.fillRect(50, 40, 100, 100);
+						</code></pre>
+					<img src="https://metanit.com/web/html5/pics/6.32.png" alt="img" style="width: 400px; height: 300px;">
+					</section>
+					<section>
+						<p>
+							The <span>setLineDash()</span> method takes as a parameter an array of numbers that set the distance between lines.
+						</p>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+							context.strokeStyle = "red";
+							context.setLineDash([15,5]);
+							context.strokeRect(40, 40, 100, 100);
+							context.strokeStyle = "blue";
+							context.setLineDash([2,5,6]);
+							context.strokeRect(180, 40, 100, 100);
+							context.strokeStyle = "green";
+							context.setLineDash([2]);
+							context.strokeRect(320, 40, 100, 100);
+						</code></pre>
+					<img src="https://metanit.com/web/html5/pics/6.42.png" alt="img" style="width: 500px; height: 200px;">
+					</section>
+					<section>
+						<p style="margin: 0; font-size: 23px;">The <span style="font-size: 23px;">lineJoin</span> property is responsible for the type of connection of lines in the figure. It can take the following values:</p>
+						<ul>
+							<li style="margin: 0; font-size: 23px;"><span style="font-size: 23px;">miter:</span> straight joints that form right angles. This is the default</li>
+							<li style="margin: 0; font-size: 23px;"><span style="font-size: 23px;">round:</span> rounded connections</li>
+							<li style="margin: 0; font-size: 23px;"><span style="font-size: 23px;">bevel:</span> conical connections</li>
+						</ul>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+							context.lineWidth = 15; 
+							context.lineJoin = "miter";
+							context.strokeRect(40, 40, 100, 100);
+							context.lineJoin = "bevel";
+							context.strokeRect(180, 40, 100, 100);
+							context.lineJoin = "round";
+							context.strokeRect(310, 40, 100, 100);
+						</code></pre>
+						<img src="https://metanit.com/web/html5/pics/6.33.png" alt="img" style="width: 400px; height: 200px;">
+					</section>
+					<section>
+						<p style="font-size: 23px;">
+							The <span style="font-size: 23px;">globalAlpha</span> property sets the rendering transparency. It can take as a value a number from 0 (fully transparent) to 1.0 (not transparent)
+							<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								context.fillStyle = "blue";
+								context.fillRect(50, 50, 100, 100);
+								context.globalAlpha = 0.5;
+								context.fillStyle = "red";
+								context.fillRect(100, 100, 100, 100);
+							</code></pre>
+							<img src="https://metanit.com/web/html5/pics/6.35.png" alt="img" style="width: 400px; height: 400px;">
+						</p>
+					</section>
+				</section>
+				<section>
+					<h3>Background images</h3>
+					<p>
+						To set the background image, canvas has a <span>reatePattern()</span> function that takes two parameters: image and the principle of image repetition
+					</p>
+					<p>
+						The last parameter plays a role in the event that the size of the image is smaller than the size of the figure on the canvas. This parameter can take the following values:
+					</p>
+					<ul>
+						<li><span>repeat:</span> The image is repeated to fill the entire space of the shape</li>
+						<li><span>repeat-x:</span> Image repeats only horizontally</li>
+						<li><span>repeat-y:</span> Image repeats only vertically</li>
+						<li><span>no-repeat:</span> the image is not repeated</li>
+					</ul>
+					<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+						const img = new Image();
+						img.src = "dubi.png";
+
+						const pattern = context.createPattern(img, "repeat");
+						context.fillStyle = pattern;
+					</code></pre>
+				</section>
+				<section>
+					<h3>Creating a Gradient</h3>
+					<p>
+						The Canvas element allows you to use a gradient as a background. This is done using a CanvasGradient object, which can be created either with the <span>createLinearGradient()</span> method (linear gradient) or with the <span>createRadialGradient()</span> method (radial gradient).
+					</p>
+					<p>Also, to create a gradient, you must set the anchor points that determine the color. To do this, use the <span>addColorStop(offset, color)</span> method, where offset is the offset of the gradient point, and color is its color.</p>
+					<p>An offset represents a value between 0 and 1. An offset of 0 represents the beginning of the gradient, and 1 represents the end of the gradient. The color is specified either as a string, or as a hexadecimal value, or as an rgb/rgba value</p>
+					<p>Matching the x-coordinates of the start and end points creates a <span>vertical gradient</span></p>
+					<p>Matching the y-coordinates of the start and end points creates a <span>horizontal gradient</span></p>
+				</section>
+				<section>
+					<section>
+						<h3>Drawing text</h3>
+					<p>
+						Along with geometric shapes and images, canvas allows you to display text. To do this, you first need to set the canvas context's font property:
+					</p>
+					<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+						const canvas = document.getElementById("myCanvas"), 
+						context = canvas.getContext("2d");
+						context.font = "22px Verdana";
+					</code></pre>
+					<p>
+						The <span>fillText(text, x, y)</span> method takes three parameters: the text to be displayed and the x and y coordinates of the point from which the text is output
+					</p>
+					<p>
+						You can also use the <span>strokeText()</span> method to draw text, which creates a border for the characters to be drawn
+					</p>
+					</section>
+					<section>
+						<p>
+							The <span>textAlign</span> property allows you to align text with respect to one of the sides. This property can take the following values:
+							<ul>
+								<li><span>left:</span> text starts at specified position</li>
+								<li><span>right:</span> the text ends up to the specified position</li>
+								<li><span>center:</span> text is centered relative to the specified position</li>
+								<li><span>start:</span> default value, text starts at specified position</li>
+								<li><span>and:</span> the text ends up to the specified position</li>
+							</ul>
+						</p>
+						<p>
+							The <span>lineWidth</span> property sets the line width of the text
+						</p>
+						<p>
+							Using the <span>measureText()</span> method, you can determine the width of the text on the canvas
+						</p>
+					</section>
+					<section>
+						<p>
+							The <span>textBaseline</span> property sets the text alignment to the baseline. It can take the following values:
+							<div style="display: flex; justify-content: center; align-items: center;">
+								<ul style="margin-right: 200px;">
+									<li><span>top</span></li>
+									<li><span>middle</span></li>
+									<li><span>bottom</span></li>
+									<li><span>alphabetic</span></li>
+									<li><span>hanging</span></li>
+									<li><span>ideographic</span></li>
+								</ul>
+								<img src="https://metanit.com/web/html5/pics/6.12.png" alt="img" style="width: 500px; height: 400px;">
+							</div>
+						</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<p>
+							In addition to rectangles, canvas allows you to draw more complex shapes. Complex shapes are designed using the concept of geometric paths, which represent a set of lines, circles, rectangles, and other smaller details needed to build a complex shape.
+						</p>
+						<p>
+							To create a new path, you need to call the <span>beginPath()</span> method, and after the path is completed, the <span>closePath()</span> method is called:
+						</p>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+							const canvas = document.getElementById("myCanvas"), 
+							context = canvas.getContext("2d");
+							context.beginPath();
+							// here are instructions for creating shapes
+							context.closePath();
+						</code></pre>
+						<p>
+							Between calls to the <span>beginPath()</span> and <span>closePath()</span> methods are methods that directly create different parts of the path
+						</p>
+					</section>
+					<section>
+						<p>To start drawing a path, we need to fix the starting point of this path. This can be done using the <span>moveTo()</span> method. The method moves us to a point with x and y coordinates</p>
+						<p>The <span>lineTo()</span> method draws a line. The method draws a line from the current position to a point with x and y coordinates</p>
+						<p>To display the path, use the <span>stroke()</span> method</p>
+						<div style="display: flex; justify-content: center; align-items: center;">
+							<pre style="width: 500px;" data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								context.beginPath();
+								context.moveTo(30, 20);
+								context.lineTo(150, 140);
+								context.lineTo(250, 30);
+								context.closePath();
+								context.strokeStyle = "red";
+								context.stroke();
+							</code></pre>
+							<img src="https://metanit.com/web/html5/pics/6.13.png" alt="img" style="width: 350px; height: 300px;">
+						</div>
+						<p>The <span>context.closePath()</span> method closes the path by connecting the last point to the first. And as a result, a closed loop is formed</p>
+					</section>
+					<section>
+						<p>The <span>rect()</span> method creates a rectangle. It has the following definition:</p>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+							rect(x, y, width, height)
+						</code></pre>
+						<p>Where x and y are the coordinates of the upper left corner of the rectangle relative to the canvas, and width and height are the width and height of the rectangle, respectively</p>
+						<p>The <span>fill()</span>> method fills the entire inner space of the drawn path with color:</p>
+						<div style="display: flex; justify-content: center; align-items: center;">
+							<pre style="width: 510px;" data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								context.beginPath();
+								context.rect(30, 20, 100, 90);
+								context.closePath();
+								context.strokeStyle = "red";
+								context.fillStyle = "blue";
+								context.fill();
+								context.stroke();
+							</code></pre>
+							<img src="https://metanit.com/web/html5/pics/6.16.png" alt="img" style="width: 350px; height: 300px;">
+						</div>
+					</section>
+					<section>
+						<p>The <span>arc()</span> method adds a circle or arc to the path. It has the following definition:</p>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+							arc(x, y, radius, startAngle, endAngle, anticlockwise)
+						</code></pre>
+						<ul>
+							<li><span>x and y:</span> x- and y-coordinates where the arc starts</li>
+							<li><span>radius: </span> the radius of the circle along which the arch is created</li>
+							<li><span>startAngle and endAngle:</span> the start and end angle that truncates the circle to the arch. The unit of measure for angles is radians. For example, a full circle is 2π radians. If, for example, we need to draw a full circle, then we can specify a value of 2π for the endAngle parameter. In JavaScript, this value can be obtained using the expression Math.PI * 2.</li>
+							<li><span>anticlockwise:</span> the direction of movement along the circle when cutting off its part, limited by the initial and final angle. When set to true, the direction is counterclockwise, and when set to false, it is clockwise.</li>
+						</ul>
+					</section>
+					<section>
+							<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								context.beginPath();
+								context.moveTo(20, 90);
+								context.arc(20, 90, 50, 0, Math.PI/2, false);
+								context.closePath();
+								context.stroke();
+
+								context.beginPath();
+								context.moveTo(130, 90);
+								context.arc(130, 90, 50, 0, Math.PI, false);
+								context.closePath();
+								context.stroke();
+
+								context.beginPath();
+								context.moveTo(240, 90);
+								context.arc(240, 90, 50, 0, Math.PI * 3 / 2, false);
+								context.closePath();
+								context.stroke();
+
+								context.beginPath();
+								context.arc(350, 90, 50, 0, Math.PI*2, false);
+								context.closePath();
+								context.stroke();
+							</code></pre>
+					</section>
+					<section>
+						<img src="https://metanit.com/web/html5/pics/6.19.png" alt="img" style="width: 700px; height: 400px;">
+					</section>
+					<section>
+						<p>The <span>arcTo()</span>> method also draws an arc. It has the following definition:
+							<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								arcTo(x1, y1, x2, y2, radius)
+							</code></pre>
+							<p>Where x1 and y1 are the coordinates of the first control point, x2 and y2 are the coordinates of the second control point, and radius is the radius of the arc</p>
+							<div style="display: flex; justify-content: center; align-items: center;">
+								<pre style="width: 510px;" data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+									context.strokeStyle = "red";
+									context.beginPath();
+									context.moveTo(0, 150);
+									context.arcTo(0, 0, 150, 0, 140)
+									context.closePath();
+									context.stroke();
+								</code></pre>
+								<img src="https://metanit.com/web/html5/pics/6.21.png" alt="img" style="width: 350px; height: 300px;">
+							</div>
+					</section>
+					<section>
+						<p>The <span>quadraticCurveTo()</span> method creates a quadratic curve. It has the following definition:
+							<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								quadraticCurveTo(x1, y1, x2, y2)
+							</code></pre>
+							<p>Where x1 and y1 are the coordinates of the first anchor point and x2 and y2 are the coordinates of the second anchor point</p>
+							<div style="display: flex; justify-content: center; align-items: center;">
+								<pre style="width: 510px;" data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+									context.strokeStyle = "red";
+									context.beginPath();
+									context.moveTo(20, 90);
+									context.quadraticCurveTo(130, 0, 280, 90)
+									context.closePath();
+									context.stroke();
+								</code></pre>
+								<img src="https://metanit.com/web/html5/pics/6.22.png" alt="img" style="width: 350px; height: 300px;">
+							</div>
+					</section>
+					<section>
+						<p>The <span>bezierCurveTo()</span> method draws a bezier curve. It has the following definition:
+							<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								bezierCurveTo(x1, y1, x2, y2, x3, y3)
+							</code></pre>
+							<p>Where x1 and y1 are the coordinates of the first anchor point, x2 and y2 are the coordinates of the second anchor point, and x3 and y3 are the coordinates of the third anchor point</p>
+							<div style="display: flex; justify-content: center; align-items: center;">
+								<pre style="width: 510px;" data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+									context.strokeStyle = "red";
+									context.beginPath();
+									context.moveTo(30, 100);
+									context.bezierCurveTo(110, 0, 190, 200, 270, 100);
+									context.closePath();
+									context.stroke();
+								</code></pre>
+								<img src="https://metanit.com/web/html5/pics/6.23.png" alt="img" style="width: 350px; height: 300px;">
+							</div>
+					</section>
+					<section>
+						<h4>Complex figures</h4>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+						const ctx = canvas.getContext("2d");
+            ctx.beginPath();
+            ctx.fill();
+            ctx.fillStyle = "yellow";
+            ctx.beginPath();
+            ctx.arc(160, 130, 100, 0, 2 * Math.PI);
+            ctx.fill();
+             
+            // mouth
+            ctx.beginPath();
+            ctx.moveTo(100, 160);
+            ctx.quadraticCurveTo(160, 250, 220, 160);
+            ctx.closePath();
+            ctx.fillStyle = "red";
+            ctx.fill();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "black";
+            ctx.stroke();
+             
+            // teeth
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(140, 160, 15, 15);
+            ctx.fillRect(170, 160, 15, 15);
+ 
+            //eyes
+            ctx.beginPath();
+            ctx.arc(130, 90, 20, 0, 2 * Math.PI);
+            ctx.fillStyle = "#333333";
+            ctx.fill();
+            ctx.closePath();
+ 
+            ctx.beginPath();
+            ctx.arc(190, 90, 20, 0, 2 * Math.PI);
+            ctx.fillStyle = "#333333";
+            ctx.fill();
+            ctx.closePath();
+						</code></pre>
+					</section>
+					<section>
+						<img src="https://metanit.com/web/html5/pics/6.45.png" alt="img" style="width: 500px; height: 500px;">
+					</section>
+				</section>
+				<section>
+					<h4>Adding shadows</h4>
+					<p>
+						The canvas element supports adding shadows to drawn objects. The following properties are used to create shadows:
+					</p>
+					<ul>
+						<li><span>shadowOffsetX:</span> horizontal offset in pixels to the right (or left if negative)</li>
+						<li><span>shadowOffsetY:</span> vertical offset in pixels from the bottom (or top if negative)</li>
+						<li><span>shadowBlur:</span> number of pixels to set shadow blur</li>
+						<li><span>shadowColor:</span> the color of the shadow</li>
+					</ul>
+				</section>
+				<section>
+					<section>
+						<h3>Transformations</h3>
+						<p>The canvas element supports transformations - translation, rotating, scaling.</p>
+						<p>The translation is done using the <span>translate()</span> method:</p>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+							translate(x, y)
+						</code></pre>
+						<p>The first parameter indicates the offset along the X axis, and the second parameter specifies the offset along the Y axis</p>
+						<div style="display: flex; justify-content: center; align-items: center;">
+							<pre style="width: 580px;" data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								context.fillStyle = "blue";
+								context.fillRect(50, 50, 100, 100);
+								//offset 100px right and 50px down          
+								context.translate(100, 50);
+								context.globalAlpha = 0.5;
+								context.fillStyle = "red";
+								context.fillRect(50, 50, 100, 100);
+							</code></pre>
+							<img src="https://metanit.com/web/html5/pics/6.36.png" alt="img" style="width: 230px; height: 230px;">
+						</div>
+						<p style="font-size: 20px;">Here, two equal rectangles are drawn at the same position: blue and red. However, a translation transformation is applied to the red rectangle</p>
+					</section>
+					<section>
+						<p>To rotate shapes on a canvas, use the <span>rotate()</span> method:</p>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+							rotate(angle)
+						</code></pre>
+						<p>The rotation angle in radians relative to the point with coordinates (0, 0) is passed to this method as a parameter</p>
+						<div style="display: flex; justify-content: center; align-items: center;">
+							<pre style="width: 580px;" data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								context.fillStyle = "blue";
+								context.fillRect(50, 50, 100, 100);
+								//rotate 0.52 radians or 30 degrees          
+								context.rotate(.52); 
+								context.globalAlpha = 0.5;
+								context.fillStyle = "red";
+								context.fillRect(50, 50, 100, 100);
+							</code></pre>
+							<img src="https://metanit.com/web/html5/pics/6.38.png" alt="img" style="width: 300px; height: 300px;">
+						</div>
+					</section>
+					<section>
+						<p>o scale shapes, use the <span>scale()</span> method:</p>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+							scale(xScale, yScale)
+						</code></pre>
+						<p>The xScale parameter indicates scaling along the X axis, and yScale indicates the scaling along the Y axis.</p>
+						<div style="display: flex; justify-content: center; align-items: center;">
+							<pre style="width: 580px;" data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								context.fillStyle = "blue";
+								context.fillRect(30, 30, 100, 100);
+								//stretching in width by 1.5 times and compression in height by 1.3 times						 
+								context.scale(1.5, 1.3);
+								context.globalAlpha = 0.5;
+								context.fillStyle = "red";
+								context.fillRect(50, 30, 100, 100);
+							</code></pre>
+							<img src="https://metanit.com/web/html5/pics/6.39.png" alt="img" style="width: 300px; height: 300px;">
+						</div>
+					</section>
+					<section>
+						<p>If necessary, we can apply successively several transformations:</p>
+						<pre style="width: 580px;" data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+							ctx.scale(1.5, 1.3);
+							ctx.translate(100, 150);
+							ctx.rotate(0.34);
+						</code></pre>
+						<p>But the context of the canvas element also provides a <span>transform()</span> method that allows you to set the transformation matrix:</p>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+							transform(a, b, c, d, e, f)
+						</code></pre>
+						<p>All parameters of this method sequentially represent the elements of the transformation matrix:</p>
+						<ul>
+							<li><span>a:</span> X-axis scaling</li>
+							<li><span>b:</span> rotate around the x-axis</li>
+							<li><span>c:</span> rotation around the y-axis</li>
+							<li><span>d:</span> Y-axis scaling</li>
+							<li><span>e:</span> horizontal offset</li>
+							<li><span>f:</span> vertical offset</li>
+						</ul>
+					</section>
+					<section>
+						<h5>Transform replacement</h5>
+						<p>When you successively apply different transformations, they are simply applied sequentially to the shapes. However, a situation may arise when it is necessary to apply the transformation not together with others, but instead of others, that is, to replace the transformation. The <span>setTransform()</span> method is used for this:</p>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								setTransform(a, b, c, d, e, f)
+						</code></pre>
+						<p>Its parameters represent the transformation matrix, and in general its use is similar to the use of the transform() method. For example:</p>
+						<div style="display: flex; justify-content: center; align-items: center;">
+							<pre style="width: 580px;" data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								let k = 0;
+								for (let x = 0; x &#60; 30; x++) {
+									k = Math.floor(255 / 34 * x);
+									context.fillStyle = "rgb(" + k + "," + k + "," + k + ")";
+									context.fillRect(50, 50, 200, 100);
+
+									context.setTransform(1, 0, 0, 1, x, x);
+								}
+							</code></pre>
+							<img src="https://metanit.com/web/html5/pics/6.43.png" alt="img" style="width: 300px; height: 300px;">
+						</div>
+					</section>
+					<section>
+						<h5>Reset transformations</h5>
+						<p>When applying transformations, all subsequent rendering of shapes is subjected to these transformations. But a situation is possible when, after a single application of the transformation, we no longer need to apply it. And for all subsequent rendering, we can reset the transformations using the <span>resetTransform()</span> method:</p>
+						<div style="display: flex; justify-content: center; align-items: center;">
+							<pre style="width: 600px;" data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+								context.fillStyle = "blue";
+								context.fillRect(50, 50, 100, 100);
+
+								context.translate(100, 50);
+								//then apply the transformation
+								context.globalAlpha = 0.5;
+								context.fillStyle = "red";
+								context.fillRect(50, 50, 100, 100);
+
+								context.resetTransform();
+								//the transformation is no longer applied
+								context.fillStyle = "green";
+								context.fillRect(0, 0, 100, 100);
+							</code></pre>
+							<img src="https://metanit.com/web/html5/pics/6.41.png" alt="img" style="width: 300px; height: 300px;">
+						</div>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h3>Mouse drawing</h3>
+						<p>So far, we've looked at mostly static graphics on canvas. But we can also create shapes dynamically by simply drawing with the mouse pointer.</p>
+						<p>To do this, define the following page:</p>
+						<pre data-id="code-animation"><code class="hljs javascript" data-trim data-line-numbers>
+							<!DOCTYPE html>
+							<html>
+							    <head>
+							        <meta charset="utf-8">
+							        <title>Canvas</title>
+							    </head>
+							    <body>
+							        <canvas id="myCanvas" width="350" height="250"
+							                style="background-color:#eee; border: 1px solid #ccc; margin:10px;">
+							            Ваш браузер не поддерживает Canvas
+							        </canvas>
+							        <script>
+							            var canvas = document.getElementById("myCanvas"), 
+							                context = canvas.getContext("2d"),
+							                w = canvas.width,
+							                h=canvas.height;
+											
+							            var mouse = { x:0, y:0};
+							            var draw = false;
+											
+							            canvas.addEventListener("mousedown", function(e){
+													
+							                mouse.x = e.pageX - this.offsetLeft;
+							                mouse.y = e.pageY - this.offsetTop;
+							                draw = true;
+							                context.beginPath();
+							                context.moveTo(mouse.x, mouse.y);
+							            });
+							            canvas.addEventListener("mousemove", function(e){
+													
+							                if(draw==true){
+															
+							                    mouse.x = e.pageX - this.offsetLeft;
+							                    mouse.y = e.pageY - this.offsetTop;
+							                    context.lineTo(mouse.x, mouse.y);
+							                    context.stroke();
+							                }
+							            });
+							            canvas.addEventListener("mouseup", function(e){
+													
+							                mouse.x = e.pageX - this.offsetLeft;
+							                mouse.y = e.pageY - this.offsetTop;
+							                context.lineTo(mouse.x, mouse.y);
+							                context.stroke();
+							                context.closePath();
+							                draw = false;
+							            });
+							        </script>
+							    </body>
+							</html>
+						</code></pre>
+					</section>
+					<section>
+						<p>
+							To handle mouse movement, three handlers are defined for the canvas element - mouse down, mouse move, and mouse release. When the mouse is pressed, we set the draw variable to true. That is, drawing is in progress. Also, when pressed, we fix the point from which the drawing will go.
+						</p>
+						<p>
+							When moving the mouse, we get the point to which the pointer has moved, and draw a line. When the pointer is released, we close the graphic path using the context.closePath() method and reset the draw variable to false.
+						</p>
+						<img src="https://metanit.com/web/html5/pics/6.44.png" alt="img" style="width: 400px; height: 400px;">
+					</section>
+				</section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
